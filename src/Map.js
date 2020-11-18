@@ -34,6 +34,7 @@ const Map = (props) => {
 
   useEffect(() => {
     // figure out when technicians are close to each other
+    // what if multiple techs are close to each other?
     const techs = [];
     for (let i = 0; i < props.data[siteId][props.minute].features.length; i++) {
       for (let j = i + 1; j < props.data[siteId][props.minute].features.length; j++) {
@@ -41,7 +42,7 @@ const Map = (props) => {
         const to = props.data[siteId][props.minute].features[j].geometry.coordinates;
         const options = { units: 'kilometers' };
         const techDistance = distance(from, to, options);
-        if (techDistance * 1000 < 1000) {
+        if (techDistance * 1000 < 304.8) {
           techs.push(props.data[siteId][props.minute].features[i].properties.name);
           techs.push(props.data[siteId][props.minute].features[j].properties.name);
         }
@@ -53,7 +54,7 @@ const Map = (props) => {
 
 
   const renderProximityMessage = () => {
-    if (inProximity !== []) {
+    if (inProximity.length >= 1) {
       const string = inProximity.join(' & ');
       return (<p>{`${string} are close to each other`}</p>);
     }
@@ -69,7 +70,7 @@ const Map = (props) => {
         <div className='map-container' ref={mapContainerRef} />
       </div>
     </>
-  )
+  );
 }
 
 export default Map;
